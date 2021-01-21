@@ -16,14 +16,11 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
 
-    Tank myTank = new Tank(200,400,Dir.DOWN,this,Group.GOOD);
-    List<Bullet> bulletList = new ArrayList<>();
-    List<Tank> tankList = new ArrayList<>();
-    List<Explode> explodeList = new ArrayList<>();
+
 //    Explode e = new Explode(100, 100, this);
      static final int GAME_WIDTH = 800;
      static final int GAME_HEIGHT = 600;
-
+    GameModel gm = new GameModel();
     Image offScreenImage = null;
 
     public TankFrame() throws HeadlessException {
@@ -39,6 +36,10 @@ public class TankFrame extends Frame {
         });
 
         this.addKeyListener(new MyKeyListener());
+    }
+    @Override
+    public void paint(Graphics g) {
+        gm.paint(g);
     }
 
     @Override
@@ -57,33 +58,7 @@ public class TankFrame extends Frame {
 
 
 
-    @Override
-    public void paint(Graphics g) {
-        Color c = g.getColor();
-        g.setColor(Color.WHITE);
-        g.drawString("子弹的数量：" + this.bulletList.size(),10,60);
-        g.drawString("敌人的数量：" + this.tankList.size(),10,80);
-        g.drawString("爆炸的数量：" + this.explodeList.size(),10,100);
-        g.setColor(c);
-         myTank.paint(g);
-        for (int i = 0; i <bulletList.size() ; i++) {
-            bulletList.get(i).paint(g);
-        }
 
-        for (int j = 0; j <tankList.size() ; j++) {
-            tankList.get(j).paint(g);
-        }
-
-        for (int p = 0; p <explodeList.size() ; p++) {
-            explodeList.get(p).paint(g);
-        }
-
-        for (int i = 0; i < bulletList.size(); i++) {
-            for (int j = 0; j <tankList.size() ; j++) {
-                bulletList.get(i).collideWith(tankList.get(j));
-            }
-        }
-    }
 
     class MyKeyListener extends KeyAdapter {
         boolean bU = false;
@@ -132,7 +107,7 @@ public class TankFrame extends Frame {
                     bD = false;
                     break;
                 case KeyEvent.VK_CONTROL:
-                    myTank.fire();
+                    gm.getMainTank().fire();
                     break;
                 default:
                     break;
@@ -140,6 +115,7 @@ public class TankFrame extends Frame {
             setMainTankDir();
     }
         private void setMainTankDir(){
+           Tank myTank = gm.getMainTank();
             if(!bD && !bU && !bL && !bR) myTank.setMoving(false);
             else {
                 myTank.setMoving(true);

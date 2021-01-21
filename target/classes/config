@@ -5,5 +5,7 @@ bulletSpeed=10
 gameWidth=1080
 gameHeight=720
 #fireStrategy
-goodFS=com.baymax.tank.FourDirFireStrategy
-badFS=com.baymax.tank.DefaultFireStrategy
+goodFS=com.baymax.tank.strategy.FourDirFireStrategy
+badFS=com.baymax.tank.strategy.DefaultFireStrategy
++#colliders
+colliders=com.baymax.tank.cor.BulletTankCollider,com.baymax.tank.cor.TankTankCollider

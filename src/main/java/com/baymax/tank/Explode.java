@@ -8,17 +8,17 @@ import java.awt.*;
  * @email: xxx@xx.com
  * @date: 2021/1/21 12:34 下午
  */
-public class Explode {
+public class Explode extends GameObject{
     public static int WIDTH = ResourceMgr.explodes[0].getWidth();
     public static int HEIGHT = ResourceMgr.explodes[0].getHeight();
     private boolean living = true;
     private int x,y;
-    TankFrame tf = null;
+    GameModel gm = null;
     private int step = 0;
-    public Explode(int x, int y, TankFrame tf) {
+    public Explode(int x, int y, GameModel gm) {
         this.x = x;
         this.y = y;
-        this.tf = tf;
+        this.gm = gm;
         new Thread(()->new Audio("audio/explode.wav").play()).start();
     }
 
@@ -27,8 +27,18 @@ public class Explode {
 
         if(step >= ResourceMgr.explodes.length){
             step = 0;
-            tf.explodeList.remove(this);
+            gm.explodeList.remove(this);
         }
+    }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
 }

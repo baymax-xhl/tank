@@ -8,12 +8,12 @@ import java.awt.*;
  * @email: xxx@xx.com
  * @date: 2021/1/20 2:53 下午
  */
-public class Bullet {
+public class Bullet extends GameObject{
 
     private int x,y;
      Dir dir;
     private boolean living = true;
-     TankFrame tf = null;
+     GameModel gm = null;
     private static final int SPEED = 10;
      Group group = Group.BAD;
     public static int WIDTH = ResourceMgr.bulletD.getWidth();
@@ -24,22 +24,22 @@ public class Bullet {
         return group;
     }
 
-    public Bullet(int x, int y, Dir dir, TankFrame tf,Group group) {
+    public Bullet(int x, int y, Dir dir, GameModel gm,Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
-        this.tf = tf;
+        this.gm = gm;
         this.group = group;
         rectangle.x = x;
         rectangle.y = y;
         rectangle.width = WIDTH;
         rectangle.height = HEIGHT;
-        tf.bulletList.add(this);
+        gm.bulletList.add(this);
 
     }
     public void paint(Graphics g) {
         if(!this.living){
-            tf.bulletList.remove(this);
+            gm.bulletList.remove(this);
         }
         switch (dir){
             case LEFT :
@@ -57,6 +57,17 @@ public class Bullet {
         }
         move();
     }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
+    }
+
     private void move(){
         switch (dir) {
             case UP:
@@ -76,22 +87,24 @@ public class Bullet {
         //update rect
         rectangle.x = this.x;
         rectangle.y = this.y;
-        if(x < 0 || y < 0 || x > tf.GAME_WIDTH || y > tf.GAME_HEIGHT ){
+        if(x < 0 || y < 0 || x > TankFrame.GAME_WIDTH || y > TankFrame.GAME_HEIGHT ){
             living = false;
         }
     }
 
-    public void collideWith(Tank tank) {
+    public boolean collideWith(Tank tank) {
 
-        if(this.group == tank.getGroup()) return;
+        if(this.group == tank.getGroup()) return false;
         //用一个rect记录子弹的位置
         if(rectangle.intersects(tank.rectangle)) {
             this.die();
             tank.die();
             int eX = tank.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
             int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
-            tf.explodeList.add(new Explode(eX,eY,tf));
+            gm.explodeList.add(new Explode(eX,eY,gm));
+            return true;
         }
+        return false;
     }
 
     private void die() {

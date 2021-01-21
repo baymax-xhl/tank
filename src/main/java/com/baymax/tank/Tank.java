@@ -11,31 +11,31 @@ import java.util.Random;
  * @date: 2021/1/20 2:23 下午
  */
 
-public class Tank {
+public class Tank extends GameObject{
 
     private int x,y;
-     Dir dir = Dir.DOWN;
+     public Dir dir = Dir.DOWN;
     private boolean moving = true;
     private boolean living = true;
-     TankFrame tf ;
-     Group group = Group.BAD;
+    public GameModel gm ;
+    public Group group = Group.BAD;
     private Random random = new Random();
     private static final int SPEED = 5;
     public static int WIDTH = ResourceMgr.goodTankD.getWidth();
     public static int HEIGHT = ResourceMgr.goodTankD.getHeight();
-    Rectangle rectangle = new Rectangle();
-    FireStrategy fs ;
+    public Rectangle rectangle = new Rectangle();
+    public FireStrategy fs ;
 
     public Group getGroup() {
         return group;
     }
 
-    public Tank(int x, int y, Dir dir, TankFrame tankFrame,Group group) {
+    public Tank(int x, int y, Dir dir, GameModel gm,Group group) {
         super();
         this.x = x;
         this.y = y;
         this.dir = dir;
-        this.tf = tankFrame;
+        this.gm = gm;
         this.group = group;
         rectangle.x = x;
         rectangle.y = y;
@@ -85,7 +85,7 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        if(!living) tf.tankList.remove(this);
+        if(!living) gm.tankList.remove(this);
         switch (dir){
             case LEFT :
                 g.drawImage(this.group.equals(Group.GOOD)? ResourceMgr.goodTankL:ResourceMgr.badTankL,x,y,null);
@@ -102,6 +102,17 @@ public class Tank {
         }
         move();
     }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
+    }
+
     private void move(){
         if(!moving) return;
             switch (dir) {
@@ -156,5 +167,9 @@ public class Tank {
     public void die() {
 
         this.living = false;
+    }
+
+    public  void stop(){
+        moving = false;
     }
 }
