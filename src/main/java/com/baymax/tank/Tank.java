@@ -1,6 +1,7 @@
 package com.baymax.tank;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 /**
@@ -13,17 +14,17 @@ import java.util.Random;
 public class Tank {
 
     private int x,y;
-    private Dir dir = Dir.DOWN;
+     Dir dir = Dir.DOWN;
     private boolean moving = true;
     private boolean living = true;
-    private TankFrame tf ;
-    private Group group = Group.BAD;
+     TankFrame tf ;
+     Group group = Group.BAD;
     private Random random = new Random();
     private static final int SPEED = 5;
     public static int WIDTH = ResourceMgr.goodTankD.getWidth();
     public static int HEIGHT = ResourceMgr.goodTankD.getHeight();
     Rectangle rectangle = new Rectangle();
-
+    FireStrategy fs ;
 
     public Group getGroup() {
         return group;
@@ -40,6 +41,40 @@ public class Tank {
         rectangle.y = y;
         rectangle.width = WIDTH;
         rectangle.height = HEIGHT;
+
+        if(this.group.equals(Group.GOOD)){
+
+            try {
+                String goodFSName = (String) PropertyMgr.get("goodFS");
+                fs = (FireStrategy) Class.forName(goodFSName).getDeclaredConstructor().newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }else {
+
+            try {
+                String badFSName = (String) PropertyMgr.get("badFS");
+                fs = (FireStrategy) Class.forName(badFSName).getDeclaredConstructor().newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
     public int getX() {
         return x;
@@ -114,9 +149,7 @@ public class Tank {
     }
 
     public void fire() {
-        int bX = x + Tank.WIDTH/2 - Bullet.WIDTH/2;
-        int bY = y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
-      tf.bulletList.add( new Bullet(bX,bY,dir,tf,this.group));
+     fs.fire(this);
     }
 
 

@@ -11,11 +11,11 @@ import java.awt.*;
 public class Bullet {
 
     private int x,y;
-    private Dir dir;
+     Dir dir;
     private boolean living = true;
-    private TankFrame tf = null;
+     TankFrame tf = null;
     private static final int SPEED = 10;
-    private Group group = Group.BAD;
+     Group group = Group.BAD;
     public static int WIDTH = ResourceMgr.bulletD.getWidth();
     public static int HEIGHT = ResourceMgr.bulletD.getHeight();
     Rectangle rectangle = new Rectangle();
@@ -34,6 +34,7 @@ public class Bullet {
         rectangle.y = y;
         rectangle.width = WIDTH;
         rectangle.height = HEIGHT;
+        tf.bulletList.add(this);
 
     }
     public void paint(Graphics g) {
